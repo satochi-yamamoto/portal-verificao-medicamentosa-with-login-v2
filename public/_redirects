@@ -1,0 +1,9 @@
+# Redirects para SPA - React Router
+# Todas as rotas que não são arquivos devem retornar o index.html
+/*    /index.html   200
+
+# Redirects específicos para melhor SEO
+/analise    /drug-analysis    200
+/interacoes    /drug-interactions    200
+/relatorios    /reports    200
+/medicamentos    /drug-database    200

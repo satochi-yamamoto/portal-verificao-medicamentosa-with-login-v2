@@ -1,0 +1,50 @@
+User-agent: *
+Allow: /
+
+# Principais páginas
+Allow: /
+Allow: /drug-analysis
+Allow: /drug-interactions
+Allow: /drug-database
+Allow: /reports
+Allow: /privacy-policy
+Allow: /terms-of-service
+
+# Páginas para não indexar
+Disallow: /api-test
+Disallow: /admin
+Disallow: /debug
+Disallow: /test
+
+# Arquivos estáticos permitidos
+Allow: /assets/
+Allow: /images/
+Allow: /*.css
+Allow: /*.js
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.png
+Allow: /*.gif
+Allow: /*.svg
+Allow: /*.webp
+Allow: /*.ico
+
+# Sitemaps
+Sitemap: https://portal-verificacao-medicamentosa.vercel.app/sitemap.xml
+
+# Crawl-delay para ser respeitoso com os bots
+Crawl-delay: 1
+
+# Configurações específicas para Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Configurações específicas para Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Configurações específicas para outros bots médicos/farmacêuticos
+User-agent: *
+Allow: /
