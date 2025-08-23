@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check-router": "node scripts/verify-router-v7.js",
+    "check-tailwind": "node scripts/verify-tailwind.js",
+    "test-router": "echo 'Testing React Router v7 compatibility...' && npm run check-router && npm run build && echo '🎉 All tests passed! React Router v7 ready!'",
+    "test-complete": "echo 'Running complete diagnostics...' && npm run check-tailwind && npm run check-router && npm run build && echo '🚀 All systems operational!'"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.55.0",
@@ -23,7 +27,7 @@
     "react-helmet-async": "^2.0.5",
     "react-hot-toast": "^2.4.1",
     "react-markdown": "^10.1.0",
-    "react-router-dom": "^6.20.1"
+    "react-router-dom": "^7.8.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

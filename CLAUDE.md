@@ -8,6 +8,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run build` - Build for production  
 - `npm run preview` - Preview production build (port 4173)
 - `npm run lint` - Run ESLint on codebase
+- `npm run check-router` - Verify React Router v7 configuration
+- `npm run check-tailwind` - Verify Tailwind CSS configuration
+- `npm run test-router` - Full React Router v7 compatibility test
+- `npm run test-complete` - Complete system diagnostics (Tailwind + Router + Build)
 
 ## Project Overview
 
@@ -17,7 +21,7 @@ This is a React-based medication interaction verification portal that helps phar
 
 ### Frontend Stack
 - **React 18** with **Vite** build tool
-- **React Router** for client-side routing  
+- **React Router v7** with v7 future flags enabled (v7_startTransition, v7_relativeSplatPath)
 - **Tailwind CSS** with custom theme colors (primary, success, warning, danger)
 - **Lucide React** for icons, **React Hot Toast** for notifications
 
@@ -76,6 +80,22 @@ The database uses Row Level Security (RLS) policies for access control.
 - Uses OpenAI GPT-4o-mini for drug interaction analysis
 - Hybrid approach with both local database lookups and AI analysis
 - All AI recommendations require pharmacist validation (legal disclaimer applies)
+
+### React Router v7 Configuration
+- Uses `createBrowserRouter` with modern route structure
+- Future flags enabled: `v7_startTransition`, `v7_relativeSplatPath`
+- Custom hooks: `useRouterMonitoring`, `useOptimizedNavigation`
+- Navigation indicators with `startTransition` for optimal performance
+- No React Router v7 warnings - fully compatible
+- Verification scripts: `npm run check-router` and `npm run test-router`
+
+### Tailwind CSS Configuration
+- Fully configured and operational (verified via `npm run check-tailwind`)
+- Custom components: `.btn`, `.card`, `.input`, `.label`, `.select`, `.textarea`
+- Portal-specific classes: `.interaction-high`, `.interaction-medium`, `.interaction-low`
+- Status classes: `.status-active`, `.status-inactive`, `.status-pending`
+- Test page available at `/tailwind-test` for visual verification
+- CSS bundle size: ~40KB (indicates proper Tailwind compilation)
 
 ### Pre-loaded Medications
 System includes common drugs like benzodiazepines, antiepileptics, antipsychotics, cardiovascular medications, and diabetes treatments.

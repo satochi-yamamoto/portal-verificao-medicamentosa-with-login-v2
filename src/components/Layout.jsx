@@ -8,13 +8,16 @@ import {
   Database,
   Pill,
   Menu,
-  X
+  X,
+  Loader2
 } from 'lucide-react'
 import Footer from './Footer'
+import { useRouterMonitoring } from '../hooks/useRouterMonitoring'
 
 const Layout = ({ children }) => {
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { isNavigating } = useRouterMonitoring()
 
   const navigation = [
     { name: 'Início', href: '/', icon: Home },
@@ -141,7 +144,15 @@ const Layout = ({ children }) => {
         )}
 
         {/* Main content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-6 overflow-x-hidden">
+        <main className={`flex-1 p-4 sm:p-6 lg:p-6 overflow-x-hidden transition-opacity duration-200 ${
+          isNavigating ? 'opacity-70' : 'opacity-100'
+        }`}>
+          {isNavigating && (
+            <div className="fixed top-4 right-4 z-50 flex items-center gap-2 bg-white shadow-lg rounded-lg px-3 py-2">
+              <Loader2 className="h-4 w-4 animate-spin text-primary-600" />
+              <span className="text-sm text-gray-600">Carregando...</span>
+            </div>
+          )}
           {children}
         </main>
       </div>
