@@ -67,3 +67,5 @@ The `README.md` suggests using **Conventional Commits** for clear and organized 
 
 ### Testing
 There is currently no testing framework set up. Adding a testing library like **Vitest** or **React Testing Library** would be a valuable improvement to ensure code quality and reliability.
+
+
