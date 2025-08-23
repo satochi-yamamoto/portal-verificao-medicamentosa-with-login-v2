@@ -10,8 +10,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run lint` - Run ESLint on codebase
 - `npm run check-router` - Verify React Router v7 configuration
 - `npm run check-tailwind` - Verify Tailwind CSS configuration
+- `npm run check-performance` - Verify performance fixes and optimizations
 - `npm run test-router` - Full React Router v7 compatibility test
-- `npm run test-complete` - Complete system diagnostics (Tailwind + Router + Build)
+- `npm run test-performance` - Performance fixes validation with build test
+- `npm run test-complete` - Complete system diagnostics (Tailwind + Router + Performance + Build)
 
 ## Project Overview
 
@@ -96,6 +98,16 @@ The database uses Row Level Security (RLS) policies for access control.
 - Status classes: `.status-active`, `.status-inactive`, `.status-pending`
 - Test page available at `/tailwind-test` for visual verification
 - CSS bundle size: ~40KB (indicates proper Tailwind compilation)
+
+### Performance Optimizations
+- **React Markdown**: Fixed `className` prop error (v10+ compatibility)
+- **Error Boundaries**: `MarkdownErrorBoundary` for graceful markdown error handling
+- **setTimeout Optimization**: `optimizedSetTimeout` using `requestAnimationFrame` for better performance
+- **Performance Utilities**: Debounce, throttle, performance monitoring, task scheduling
+- **Performance Hooks**: `usePerformance`, `useAsyncPerformance`, `useMemoryMonitor`, `useNetworkMonitor`
+- **Vite HMR**: Optimized hot module replacement to prevent duplicate connections
+- **Build Performance**: 15.30s build time, optimized asset chunking
+- **Validation**: `npm run check-performance` for automated performance verification
 
 ### Pre-loaded Medications
 System includes common drugs like benzodiazepines, antiepileptics, antipsychotics, cardiovascular medications, and diabetes treatments.

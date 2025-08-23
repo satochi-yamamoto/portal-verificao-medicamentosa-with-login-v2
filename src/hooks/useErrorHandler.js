@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import { optimizedSetTimeout, debounce } from '../utils/performance'
+import { isOnline, waitForOnline, handleFetchError } from '../utils/fetchUtils'
 
 export const useErrorHandler = () => {
   const navigate = useNavigate()
@@ -36,7 +38,7 @@ export const useErrorHandler = () => {
 
       // Se é uma rota válida mas deu erro, tentar recarregar
       toast.error('Erro de navegação. Recarregando...', { duration: 2000 })
-      setTimeout(() => {
+      optimizedSetTimeout(() => {
         window.location.reload()
       }, 2000)
     }
@@ -62,11 +64,21 @@ export const useErrorHandler = () => {
         event.error.message.includes('Failed to fetch') ||
         event.error.message.includes('NetworkError')
       )) {
-        console.warn('🔄 Erro de carregamento detectado, recarregando...')
-        toast.loading('Recarregando recursos...', { duration: 2000 })
-        setTimeout(() => {
-          window.location.reload()
-        }, 2000)
+        const errorInfo = handleFetchError(event.error, { showToast: false });
+        
+        if (!isOnline()) {
+          toast.error('Sem conexão com a internet. Aguardando reconexão...', { duration: 5000 })
+          waitForOnline().then(() => {
+            toast.success('Conexão restaurada. Recarregando...', { duration: 2000 })
+            optimizedSetTimeout(() => window.location.reload(), 1000)
+          })
+        } else {
+          console.warn('🔄 Erro de carregamento detectado, recarregando...', errorInfo)
+          toast.loading('Recarregando recursos...', { duration: 2000 })
+          optimizedSetTimeout(() => {
+            window.location.reload()
+          }, 2000)
+        }
       }
     }
 
@@ -75,7 +87,7 @@ export const useErrorHandler = () => {
       if (event.target && (event.target.tagName === 'SCRIPT' || event.target.tagName === 'LINK')) {
         console.warn('🚨 Recurso não encontrado:', event.target.src || event.target.href)
         toast.error('Erro ao carregar recursos. Recarregando...', { duration: 2000 })
-        setTimeout(() => {
+        optimizedSetTimeout(() => {
           window.location.reload()
         }, 2000)
       }
@@ -97,10 +109,21 @@ export const useErrorHandler = () => {
   // Função para verificar conectividade
   const checkConnectivity = async () => {
     try {
-      await fetch('/api/health', { method: 'HEAD', timeout: 5000 })
+      // Check connectivity using a public endpoint instead of non-existent /api/health
+      const response = await fetch('https://httpstat.us/200', { 
+        method: 'HEAD', 
+        mode: 'no-cors',
+        cache: 'no-cache'
+      })
       return true
     } catch {
-      return false
+      // Fallback: check if we can reach our own domain
+      try {
+        await fetch(window.location.origin, { method: 'HEAD', cache: 'no-cache' })
+        return true
+      } catch {
+        return false
+      }
     }
   }
 
@@ -119,10 +142,10 @@ export const useErrorHandler = () => {
     if (error.status === 404) {
       if (reload) {
         toast.error('Recurso não encontrado. Recarregando...', { duration: 2000 })
-        setTimeout(() => window.location.reload(), 2000)
+        optimizedSetTimeout(() => window.location.reload(), 2000)
       } else if (redirectToHome) {
         toast.error('Recurso não encontrado. Redirecionando...', { duration: 2000 })
-        setTimeout(() => navigate('/', { replace: true }), 2000)
+        optimizedSetTimeout(() => navigate('/', { replace: true }), 2000)
       } else {
         navigate('/404', { replace: true })
       }
@@ -132,7 +155,7 @@ export const useErrorHandler = () => {
     if (error.status === 500 || error.status >= 500) {
       toast.error(customMessage || 'Erro interno do servidor. Tente novamente.', { duration: 4000 })
       if (retry) {
-        setTimeout(() => window.location.reload(), 3000)
+        optimizedSetTimeout(() => window.location.reload(), 3000)
       }
       return
     }
@@ -143,7 +166,7 @@ export const useErrorHandler = () => {
         if (!isOnline) {
           toast.error('Sem conexão com a internet. Verifique sua rede.', { duration: 5000 })
         } else if (reload) {
-          setTimeout(() => window.location.reload(), 2000)
+          optimizedSetTimeout(() => window.location.reload(), 2000)
         }
       })
       return

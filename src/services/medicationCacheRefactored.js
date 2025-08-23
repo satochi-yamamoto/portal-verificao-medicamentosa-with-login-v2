@@ -327,10 +327,30 @@ class MedicationCacheService {
   }
 
   /**
-   * Delay para retry
+   * Delay para retry usando requestAnimationFrame para melhor performance
    */
   async sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
+    if (ms <= 16) {
+      // Para delays curtos, usar requestAnimationFrame
+      return new Promise(resolve => requestAnimationFrame(resolve))
+    } else {
+      // Para delays longos, usar setTimeout mas com chunks menores
+      return new Promise(resolve => {
+        const chunks = Math.ceil(ms / 50) // Dividir em chunks de 50ms
+        let remainingChunks = chunks
+        
+        const processChunk = () => {
+          remainingChunks--
+          if (remainingChunks <= 0) {
+            resolve()
+          } else {
+            requestAnimationFrame(processChunk)
+          }
+        }
+        
+        requestAnimationFrame(processChunk)
+      })
+    }
   }
 
   /**

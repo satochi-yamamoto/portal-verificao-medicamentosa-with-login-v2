@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Search, Loader2, AlertCircle, History, BarChart3, Download, User, Pill, FileText } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { optimizedSetTimeout } from '../utils/performance'
 import MedicationSelector from '../components/MedicationSelector'
 import AnalysisReport from '../components/AnalysisReport'
 import { analyzeMultipleDrugInteractions, OPENAI_MODEL } from '../lib/openai'
@@ -117,7 +118,7 @@ const DrugAnalysis = () => {
               console.log('✅ Captura adicional concluída:', additionalCaptureResult)
               
               // Mostrar informação sobre captura automática
-              setTimeout(() => {
+              optimizedSetTimeout(() => {
                 toast.success(`📝 ${selectedMedications.length} medicamentos registrados automaticamente na base de dados`, { 
                   duration: 3000,
                   style: { background: '#10B981', color: 'white' }
@@ -126,7 +127,7 @@ const DrugAnalysis = () => {
             } catch (additionalCaptureError) {
               console.warn('⚠️ Erro na captura adicional:', additionalCaptureError)
               // Mostrar toast mesmo assim
-              setTimeout(() => {
+              optimizedSetTimeout(() => {
                 toast.success(`📝 Medicamentos processados - verificação em andamento`, { 
                   duration: 3000,
                   style: { background: '#10B981', color: 'white' }

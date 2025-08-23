@@ -405,10 +405,35 @@ class ConsultationLogService {
   }
 
   /**
-   * Delay para retry
+   * Delay para retry otimizado para performance
    */
   async sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms))
+    // Use optimized scheduling for better performance
+    if (ms <= 16) {
+      return new Promise(resolve => requestAnimationFrame(resolve))
+    } else {
+      // Use idle callback when available, fallback to optimized setTimeout
+      return new Promise(resolve => {
+        if (typeof requestIdleCallback !== 'undefined' && ms > 100) {
+          requestIdleCallback(resolve, { timeout: ms })
+        } else {
+          // Break long delays into smaller chunks to prevent violations
+          const chunkSize = Math.min(ms, 50)
+          let remaining = ms
+          
+          const scheduleChunk = () => {
+            if (remaining <= 0) {
+              resolve()
+            } else {
+              remaining -= chunkSize
+              requestAnimationFrame(scheduleChunk)
+            }
+          }
+          
+          requestAnimationFrame(scheduleChunk)
+        }
+      })
+    }
   }
 
   /**

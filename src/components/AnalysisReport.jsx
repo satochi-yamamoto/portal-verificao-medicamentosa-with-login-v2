@@ -1,5 +1,6 @@
 import { FileText, Download, Calendar, User } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
+import MarkdownErrorBoundary from './MarkdownErrorBoundary'
 
 const AnalysisReport = ({ 
   analysis, 
@@ -115,24 +116,25 @@ const AnalysisReport = ({
       {/* Análise Detalhada */}
       <div className="card mb-6">
         <h3 className="text-lg font-semibold mb-3">Análise Farmacêutica</h3>
-        <div className="prose prose-sm max-w-none">
-          <ReactMarkdown 
-            className="text-gray-700 leading-relaxed"
-            components={{
-              h1: ({children}) => <h1 className="text-2xl font-bold text-gray-900 mt-6 mb-4">{children}</h1>,
-              h2: ({children}) => <h2 className="text-xl font-bold text-primary-700 mt-6 mb-3">{children}</h2>,
-              h3: ({children}) => <h3 className="text-lg font-semibold text-gray-800 mt-4 mb-2">{children}</h3>,
-              p: ({children}) => <p className="mb-3 text-gray-700">{children}</p>,
-              ul: ({children}) => <ul className="mb-3 pl-5 space-y-1">{children}</ul>,
-              li: ({children}) => <li className="text-gray-700">{children}</li>,
-              strong: ({children}) => <strong className="font-semibold text-gray-900">{children}</strong>,
-              em: ({children}) => <em className="italic text-primary-600">{children}</em>,
-              hr: () => <hr className="my-4 border-gray-300" />,
-              blockquote: ({children}) => <blockquote className="border-l-4 border-primary-200 pl-4 italic text-gray-600 my-3">{children}</blockquote>
-            }}
-          >
-            {analysis}
-          </ReactMarkdown>
+        <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed">
+          <MarkdownErrorBoundary fallback={analysis}>
+            <ReactMarkdown 
+              components={{
+                h1: ({children}) => <h1 className="text-2xl font-bold text-gray-900 mt-6 mb-4">{children}</h1>,
+                h2: ({children}) => <h2 className="text-xl font-bold text-primary-700 mt-6 mb-3">{children}</h2>,
+                h3: ({children}) => <h3 className="text-lg font-semibold text-gray-800 mt-4 mb-2">{children}</h3>,
+                p: ({children}) => <p className="mb-3 text-gray-700">{children}</p>,
+                ul: ({children}) => <ul className="mb-3 pl-5 space-y-1">{children}</ul>,
+                li: ({children}) => <li className="text-gray-700">{children}</li>,
+                strong: ({children}) => <strong className="font-semibold text-gray-900">{children}</strong>,
+                em: ({children}) => <em className="italic text-primary-600">{children}</em>,
+                hr: () => <hr className="my-4 border-gray-300" />,
+                blockquote: ({children}) => <blockquote className="border-l-4 border-primary-200 pl-4 italic text-gray-600 my-3">{children}</blockquote>
+              }}
+            >
+              {analysis}
+            </ReactMarkdown>
+          </MarkdownErrorBoundary>
         </div>
       </div>
 

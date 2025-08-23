@@ -10,8 +10,10 @@
     "preview": "vite preview",
     "check-router": "node scripts/verify-router-v7.js",
     "check-tailwind": "node scripts/verify-tailwind.js",
+    "check-performance": "node scripts/verify-performance-fixes.js",
     "test-router": "echo 'Testing React Router v7 compatibility...' && npm run check-router && npm run build && echo '🎉 All tests passed! React Router v7 ready!'",
-    "test-complete": "echo 'Running complete diagnostics...' && npm run check-tailwind && npm run check-router && npm run build && echo '🚀 All systems operational!'"
+    "test-performance": "echo 'Testing performance fixes...' && npm run check-performance && npm run build && echo '🚀 Performance optimized!'",
+    "test-complete": "echo 'Running complete diagnostics...' && npm run check-tailwind && npm run check-router && npm run check-performance && npm run build && echo '🚀 All systems operational!'"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.55.0",

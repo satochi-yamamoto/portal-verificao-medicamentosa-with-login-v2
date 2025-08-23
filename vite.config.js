@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -10,8 +11,24 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true,
-    // Configuração para SPA - sempre servir index.html para rotas não encontradas
-    historyApiFallback: true
+    open: false,
+    strictPort: false,
+    hmr: {
+      protocol: 'ws',
+      host: 'localhost',
+      port: 3001,
+      timeout: 30000,
+      overlay: false
+    },
+    watch: {
+      usePolling: true,
+      interval: 1000,
+      awaitWriteFinish: {
+        stabilityThreshold: 2000,
+        pollInterval: 500
+      },
+      ignored: ['**/node_modules/**', '**/.git/**', '**/dist/**']
+    }
   },
   build: {
     rollupOptions: {
@@ -25,16 +42,46 @@ export default defineConfig({
         }
       }
     },
-    chunkSizeWarningLimit: 1000
+    chunkSizeWarningLimit: 1000,
+    commonjsOptions: {
+      transformMixedEsModules: true,
+      include: [/node_modules/]
+    }
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom', 'tailwindcss', 'postcss']
+    include: [
+      'react', 
+      'react-dom', 
+      'react-router-dom', 
+      'tailwindcss', 
+      'postcss', 
+      'style-to-js',
+      'extend'
+    ],
+    exclude: ['react-markdown', 'debug'],
+    force: true,
+    esbuildOptions: {
+      mainFields: ['module', 'main'],
+      conditions: ['import', 'module', 'browser', 'default']
+    }
   },
-  // Configuração para preview em produção
+  define: {
+    global: 'globalThis'
+  },
+  resolve: {
+    alias: {
+      'style-to-js': 'style-to-js/cjs/index.js',
+      'debug': path.resolve(__dirname, 'src/shim/debug.js'),
+      'extend': path.resolve(__dirname, 'src/shim/extend.js')
+    }
+  },
+  esbuild: {
+    // Configurar para lidar com CJS exports corretamente
+    format: 'esm',
+    target: 'es2020'
+  },
   preview: {
     port: 4173,
-    host: true,
-    // SPA fallback para preview também
-    historyApiFallback: true
+    host: true
   }
 })
